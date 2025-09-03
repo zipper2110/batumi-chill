@@ -2,65 +2,78 @@ package com.litvin.batumichill.ui
 
 import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.service.LocationService
-import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.H1
+import com.litvin.batumichill.ui.components.LocationCard
+import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.Paragraph
 import com.vaadin.flow.component.orderedlayout.FlexComponent
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.RouteAlias
 import com.vaadin.flow.theme.lumo.LumoUtility.*
 
-@Route("") 
+@Route(value = "locations", layout = MainLayout::class)
+@RouteAlias(value = "", layout = MainLayout::class)
+@PageTitle("Locations | Batumi Chill Guide")
 class MainView(private val locationService: LocationService) : VerticalLayout() {
 
-    private val grid = Grid(Location::class.java)
+    private val cardsLayout = FlexLayout()
 
     init {
         addClassName(Padding.LARGE)
         setWidthFull()
 
-        // Create header
-        val headerLayout = HorizontalLayout()
-        headerLayout.setWidthFull()
-        headerLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER)
-        headerLayout.setAlignItems(FlexComponent.Alignment.CENTER)
+        // Page title and description
+        val pageTitle = H2("Discover Batumi")
+        pageTitle.addClassNames(
+            FontSize.XXXLARGE,
+            Margin.NONE,
+            TextColor.PRIMARY
+        )
 
-        val header = H1("Batumi Chill Guide")
-        header.addClassNames(TextColor.PRIMARY, FontSize.XXXLARGE, Margin.NONE)
+        val description = Paragraph("Explore the beautiful coastal city of Batumi with our curated list of must-visit locations")
+        description.addClassNames(
+            Margin.Top.SMALL,
+            Margin.Bottom.LARGE,
+            TextColor.SECONDARY,
+            MaxWidth.SCREEN_MEDIUM
+        )
 
-        val description = Paragraph("Your personal guide to exploring the beautiful coastal city of Batumi, Georgia")
-        description.addClassNames(Margin.Top.MEDIUM, TextColor.SECONDARY, MaxWidth.SCREEN_MEDIUM)
+        add(pageTitle, description)
 
-        headerLayout.add(header)
-        add(headerLayout, description)
-
-        // Configure grid
-        configureGrid()
-
-        // Add grid to layout
-        add(grid)
+        // Configure cards layout
+        configureCardsLayout()
+        add(cardsLayout)
 
         // Load data
         updateList()
     }
 
-    private fun configureGrid() {
-        grid.addClassNames(Margin.Top.MEDIUM)
-        grid.setWidthFull()
-        grid.setHeight("500px")
-
-        // Configure columns
-        grid.setColumns("name", "category", "visited")
-        grid.addColumn(Location::description).setHeader("Description").setAutoWidth(true).setFlexGrow(1)
-
-        // Make columns auto-width
-        grid.getColumnByKey("name").setAutoWidth(true).setHeader("Location")
-        grid.getColumnByKey("category").setAutoWidth(true).setHeader("Category")
-        grid.getColumnByKey("visited").setAutoWidth(true).setHeader("Visited")
+    private fun configureCardsLayout() {
+        cardsLayout.addClassNames(
+            Display.FLEX,
+            FlexWrap.WRAP,
+            Gap.MEDIUM,
+            Margin.Top.MEDIUM
+        )
+        cardsLayout.setWidthFull()
     }
 
     private fun updateList() {
-        grid.setItems(locationService.getAllLocations())
+        cardsLayout.removeAll()
+
+        locationService.getAllLocations().forEach { location ->
+            val card = LocationCard(location)
+
+            // Make cards responsive
+            card.addClassName("card-item")
+
+            // Set card width based on screen size
+            card.style["width"] = "100%"
+            card.style["max-width"] = "300px"
+
+            cardsLayout.add(card)
+        }
     }
 }
