@@ -60,12 +60,14 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-10**
 
-## Iteration 7: Map View - Basic Implementation
-- Integrate Leaflet.js with Vaadin
-- Create a basic map view showing Batumi
-- Add simple markers for all locations
-- Implement toggle between list and map views
-- Connect markers to location data
+## ✅ COMPLETED: Iteration 7: Map View - Basic Implementation ✅
+- ✓ Integrate Leaflet.js with Vaadin
+- ✓ Create a basic map view showing Batumi
+- ✓ Add simple markers for all locations
+- ✓ Implement toggle between list and map views
+- ✓ Connect markers to location data
+
+**Status: COMPLETED on 2025-09-17**
 
 ## Iteration 8: Enhanced Map Features
 - Add popup information when markers are clicked

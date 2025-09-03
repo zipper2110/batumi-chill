@@ -15,6 +15,7 @@
     "@vaadin/vaadin-usage-statistics": "2.1.3",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
+    "leaflet": "1.9.4",
     "lit": "3.3.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -56,6 +57,7 @@
       "@vaadin/vaadin-usage-statistics": "2.1.3",
       "construct-style-sheets-polyfill": "3.1.0",
       "date-fns": "2.29.3",
+      "leaflet": "1.9.4",
       "lit": "3.3.0",
       "react": "18.3.1",
       "react-dom": "18.3.1",
@@ -83,7 +85,7 @@
       "workbox-core": "7.3.0",
       "workbox-precaching": "7.3.0"
     },
-    "hash": "f1d8049172808d33540042acfb6d60cfd6c2be0309d8cf411647441d5b21f328"
+    "hash": "b921f7e55524dbd568a1db5a74603f309fc8f26e38b0b88a3eddd3cb45f4f59d"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -160,6 +162,7 @@
     "@vaadin/upload": "24.8.6",
     "@vaadin/router": "2.0.0",
     "@vaadin/vertical-layout": "24.8.6",
-    "@vaadin/virtual-list": "24.8.6"
+    "@vaadin/virtual-list": "24.8.6",
+    "leaflet": "$leaflet"
   }
 }
