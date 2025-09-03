@@ -42,12 +42,14 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-03**
 
-## Iteration 5: Category Filtering
-- Implement category filtering functionality
-- Create a category filter component in the UI
-- Add visual indicators for different categories
-- Enhance the UI to show active filters
-- Implement "show all/visited/not visited" toggle
+## ✅ COMPLETED: Iteration 5: Category Filtering ✅
+- ✓ Implement category filtering functionality
+- ✓ Create a category filter component in the UI
+- ✓ Add visual indicators for different categories
+- ✓ Enhance the UI to show active filters
+- ✓ Implement "show all/visited/not visited" toggle
+
+**Status: COMPLETED on 2025-09-03**
 
 ## Iteration 6: Improved UI & UX
 - Enhance overall application styling
@@ -89,11 +91,9 @@ The approach is to start with a small, working MVP and incrementally add feature
 ## Future Enhancements (Post MVP)
 - User accounts and personalization
 - Ability to add custom places
-- Social sharing features
 - Offline support
 - Customizable itineraries
-- User reviews and ratings
-- Multiple language support
+- Russian language support
 
 ---
 This roadmap provides a structured approach to building the Batumi Guide application, starting with the most essential features and gradually adding more advanced functionality. Each iteration builds upon the previous one, ensuring that there's always a working version of the application.

@@ -2,8 +2,8 @@ package com.litvin.batumichill.ui.components
 
 import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.ui.LocationDetailView
+import com.litvin.batumichill.ui.util.CategoryColorUtil
 import com.vaadin.flow.component.UI
-import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.html.Paragraph
 import com.vaadin.flow.component.html.Span
@@ -95,8 +95,8 @@ class LocationCard(private val location: Location) : VerticalLayout() {
     private fun createCategoryBadge(location: Location): Span {
         val badge = Span(location.category.name.replace("_", " ").lowercase().capitalize())
         badge.addClassNames(
-            Background.PRIMARY_10,
-            TextColor.PRIMARY,
+            CategoryColorUtil.getBackgroundColorClass(location.category),
+            CategoryColorUtil.getTextColorClass(location.category),
             BorderRadius.MEDIUM,
             Padding.Horizontal.SMALL,
             Padding.Vertical.XSMALL,
