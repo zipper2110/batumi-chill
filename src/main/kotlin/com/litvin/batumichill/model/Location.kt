@@ -17,5 +17,5 @@ data class Location(
     @Enumerated(EnumType.STRING)
     val category: Category,
 
-    val visited: Boolean = false
+    var visited: Boolean = false
 )

@@ -33,12 +33,14 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-03**
 
-## Iteration 4: Location Details & Visit Tracking
-- Enhance location cards with more details
-- Add the ability to mark places as visited/not visited
-- Implement persistent storage of visited status
-- Create a location detail view that shows when a card is clicked
-- Add "back to list" navigation
+## ✅ COMPLETED: Iteration 4: Location Details & Visit Tracking ✅
+- ✓ Enhance location cards with more details
+- ✓ Add the ability to mark places as visited/not visited
+- ✓ Implement persistent storage of visited status
+- ✓ Create a location detail view that shows when a card is clicked
+- ✓ Add "back to list" navigation
+
+**Status: COMPLETED on 2025-09-03**
 
 ## Iteration 5: Category Filtering
 - Implement category filtering functionality

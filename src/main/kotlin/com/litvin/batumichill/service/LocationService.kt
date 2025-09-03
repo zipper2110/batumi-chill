@@ -23,4 +23,10 @@ class LocationService(private val locationRepository: LocationRepository) {
     fun getVisitedLocations(visited: Boolean): List<Location> {
         return locationRepository.findByVisited(visited)
     }
+
+    fun updateVisitedStatus(id: Long, visited: Boolean): Location? {
+        val location = getLocationById(id) ?: return null
+        location.visited = visited
+        return locationRepository.save(location)
+    }
 }
