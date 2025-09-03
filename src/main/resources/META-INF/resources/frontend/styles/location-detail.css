@@ -1,0 +1,66 @@
+/* Location detail view styles */
+.location-detail-view {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Loading indicator styling */
+.location-detail-view vaadin-progress-bar {
+    height: 4px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Back button styling */
+.location-detail-view vaadin-button {
+    margin-bottom: var(--lumo-space-m);
+    transition: background-color 0.3s;
+}
+
+.location-detail-view vaadin-button:hover {
+    background-color: var(--lumo-contrast-5pct);
+}
+
+/* Location name styling */
+.location-detail-view h2 {
+    margin-top: var(--lumo-space-m);
+    color: var(--lumo-primary-text-color);
+    font-weight: 600;
+}
+
+/* Description styling */
+.location-detail-view p {
+    line-height: 1.6;
+    max-width: 800px;
+}
+
+/* Visited checkbox styling */
+.location-detail-view vaadin-checkbox {
+    margin-top: var(--lumo-space-m);
+    font-weight: 500;
+}
+
+/* Error message styling */
+.location-detail-view .error-container {
+    text-align: center;
+    margin-top: var(--lumo-space-xl);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .location-detail-view {
+        padding: var(--lumo-space-s);
+    }
+    
+    .location-detail-view h2 {
+        font-size: var(--lumo-font-size-xxl);
+    }
+}

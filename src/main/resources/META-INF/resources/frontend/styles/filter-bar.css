@@ -1,0 +1,50 @@
+/* Filter bar styles */
+.filter-bar {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.filter-bar:hover {
+    box-shadow: var(--lumo-box-shadow-m);
+}
+
+/* Responsive layout for filter components */
+.filter-bar vaadin-multi-select-combo-box {
+    min-width: 250px;
+    max-width: 100%;
+}
+
+.filter-bar vaadin-radio-group {
+    min-width: 150px;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 600px) {
+    .filter-bar {
+        padding: var(--lumo-space-s);
+    }
+    
+    .filter-bar vaadin-multi-select-combo-box,
+    .filter-bar vaadin-radio-group,
+    .filter-bar vaadin-button {
+        width: 100%;
+        margin-bottom: var(--lumo-space-s);
+    }
+}
+
+/* Tablet and desktop */
+@media (min-width: 601px) {
+    .filter-bar {
+        padding: var(--lumo-space-m);
+    }
+}
+
+/* Clear filters button styling */
+.filter-bar vaadin-button {
+    margin-left: auto;
+}
+
+@media (max-width: 600px) {
+    .filter-bar vaadin-button {
+        margin-left: 0;
+    }
+}

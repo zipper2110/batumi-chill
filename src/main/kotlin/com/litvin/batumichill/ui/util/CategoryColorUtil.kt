@@ -1,8 +1,6 @@
 package com.litvin.batumichill.ui.util
 
 import com.litvin.batumichill.model.Category
-import com.vaadin.flow.theme.lumo.LumoUtility.Background
-import com.vaadin.flow.theme.lumo.LumoUtility.TextColor
 
 /**
  * Utility class for getting consistent colors for different categories.
@@ -10,36 +8,36 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor
 object CategoryColorUtil {
 
     /**
-     * Get the background color class for a category.
+     * Get the background color style for a category.
      */
-    fun getBackgroundColorClass(category: Category): String {
+    fun getBackgroundColorStyle(category: Category): String {
         return when (category) {
-            Category.RESTAURANT -> Background.SUCCESS_10
-            Category.HISTORICAL_SITE -> Background.ERROR_10
-            Category.PARK -> Background.SUCCESS_50
-            Category.BEACH -> Background.PRIMARY_10
-            Category.CAFE -> Background.CONTRAST_20
-            Category.MUSEUM -> Background.ERROR_50
-            Category.VIEWPOINT -> Background.PRIMARY_50
-            Category.SHOPPING -> Background.CONTRAST_5
-            Category.ENTERTAINMENT -> Background.SUCCESS_10
+            Category.RESTAURANT -> "var(--lumo-success-color-10pct)"
+            Category.HISTORICAL_SITE -> "var(--lumo-error-color-10pct)"
+            Category.PARK -> "var(--lumo-success-color-50pct)"
+            Category.BEACH -> "var(--lumo-primary-color-10pct)"
+            Category.CAFE -> "var(--lumo-contrast-20pct)"
+            Category.MUSEUM -> "var(--lumo-error-color-50pct)"
+            Category.VIEWPOINT -> "var(--lumo-primary-color-50pct)"
+            Category.SHOPPING -> "var(--lumo-contrast-5pct)"
+            Category.ENTERTAINMENT -> "var(--lumo-success-color-10pct)"
         }
     }
 
     /**
-     * Get the text color class for a category.
+     * Get the text color style for a category.
      */
-    fun getTextColorClass(category: Category): String {
+    fun getTextColorStyle(category: Category): String {
         return when (category) {
-            Category.RESTAURANT -> TextColor.SUCCESS
-            Category.HISTORICAL_SITE -> TextColor.ERROR
-            Category.PARK -> TextColor.SUCCESS_CONTRAST
-            Category.BEACH -> TextColor.PRIMARY
-            Category.CAFE -> TextColor.BODY
-            Category.MUSEUM -> TextColor.ERROR_CONTRAST
-            Category.VIEWPOINT -> TextColor.PRIMARY_CONTRAST
-            Category.SHOPPING -> TextColor.SECONDARY
-            Category.ENTERTAINMENT -> TextColor.SUCCESS
+            Category.RESTAURANT -> "var(--lumo-success-text-color)"
+            Category.HISTORICAL_SITE -> "var(--lumo-error-text-color)"
+            Category.PARK -> "var(--lumo-success-contrast-color)"
+            Category.BEACH -> "var(--lumo-primary-text-color)"
+            Category.CAFE -> "var(--lumo-body-text-color)"
+            Category.MUSEUM -> "var(--lumo-error-contrast-color)"
+            Category.VIEWPOINT -> "var(--lumo-primary-contrast-color)"
+            Category.SHOPPING -> "var(--lumo-secondary-text-color)"
+            Category.ENTERTAINMENT -> "var(--lumo-success-text-color)"
         }
     }
 

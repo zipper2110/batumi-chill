@@ -1,0 +1,90 @@
+/* Location card styles */
+.location-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    cursor: pointer;
+    background-color: var(--lumo-base-color);
+    border: 2px solid var(--lumo-contrast-20pct);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--lumo-box-shadow-s);
+}
+
+/* Hover effect */
+.location-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--lumo-box-shadow-l);
+    border-color: var(--lumo-primary-color);
+}
+
+/* Active state */
+.location-card:active {
+    transform: translateY(0);
+    box-shadow: var(--lumo-box-shadow-s);
+}
+
+/* Card content styling */
+.location-card h3 {
+    margin-top: 0;
+    margin-bottom: var(--lumo-space-s);
+    color: var(--lumo-primary-text-color);
+    font-size: var(--lumo-font-size-l);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.location-card p {
+    color: var(--lumo-secondary-text-color);
+    line-height: 1.5;
+    margin: var(--lumo-space-s) 0;
+    flex-grow: 1;
+}
+
+/* Visited badge styling */
+.location-card .visited-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--lumo-space-xs);
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border-radius: var(--lumo-border-radius-m);
+    background-color: var(--lumo-success-color-10);
+    color: var(--lumo-success-text-color);
+    font-size: var(--lumo-font-size-xs);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Category badge styling */
+.location-card .category-badge {
+    margin-top: var(--lumo-space-xs);
+    display: inline-block;
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border-radius: var(--lumo-border-radius-m);
+    font-size: var(--lumo-font-size-xs);
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Card header layout */
+.location-card vaadin-horizontal-layout {
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--lumo-space-s);
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .location-card {
+        width: 100%;
+        min-height: 180px;
+    }
+    
+    .location-card h3 {
+        font-size: var(--lumo-font-size-m);
+    }
+}

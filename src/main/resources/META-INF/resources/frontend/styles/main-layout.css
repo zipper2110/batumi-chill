@@ -1,0 +1,62 @@
+/* Main layout styles */
+:host {
+    --drawer-width: 256px;
+}
+
+/* Header styling */
+[part="navbar"] {
+    background-color: var(--lumo-primary-color);
+    color: var(--lumo-primary-contrast-color);
+    box-shadow: var(--lumo-box-shadow-s);
+    z-index: 100;
+}
+
+[part="navbar"] h1 {
+    color: var(--lumo-primary-contrast-color);
+    font-weight: 600;
+}
+
+/* Drawer styling */
+[part="drawer"] {
+    background-color: var(--lumo-base-color);
+    border-right: 1px solid var(--lumo-contrast-10pct);
+    box-shadow: var(--lumo-box-shadow-s);
+}
+
+/* Navigation tabs styling */
+.navigation-tabs {
+    width: 100%;
+    margin: 0;
+    padding: var(--lumo-space-s) 0;
+}
+
+.navigation-tabs::part(tabs) {
+    background-color: transparent;
+}
+
+/* Navigation link styling */
+.nav-link {
+    border-radius: var(--lumo-border-radius-m);
+    margin: var(--lumo-space-xs) var(--lumo-space-s);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: var(--lumo-primary-color-10pct);
+    color: var(--lumo-primary-text-color);
+}
+
+/* Responsive design */
+@media (max-width: 800px) {
+    :host {
+        --drawer-width: 100%;
+    }
+    
+    [part="navbar"] {
+        padding: var(--lumo-space-s);
+    }
+    
+    [part="navbar"] h1 {
+        font-size: var(--lumo-font-size-l);
+    }
+}

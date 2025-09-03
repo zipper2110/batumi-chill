@@ -1,0 +1,81 @@
+/* Main view styles */
+.main-view {
+    --card-width: 300px;
+}
+
+/* Cards layout styling */
+.main-view vaadin-flex-layout,
+.main-view .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lumo-space-m);
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+}
+
+/* Card item styling */
+.main-view .card-item {
+    flex: 0 0 var(--card-width);
+    max-width: var(--card-width);
+    margin-bottom: var(--lumo-space-m);
+}
+
+/* Responsive grid layout */
+@media (max-width: 600px) {
+    .main-view {
+        --card-width: 100%;
+    }
+    
+    .main-view .card-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 960px) {
+    .main-view {
+        --card-width: calc(50% - var(--lumo-space-m));
+    }
+    
+    .main-view .card-item {
+        flex: 0 0 calc(50% - var(--lumo-space-m));
+        max-width: calc(50% - var(--lumo-space-m));
+    }
+}
+
+@media (min-width: 961px) and (max-width: 1280px) {
+    .main-view {
+        --card-width: calc(33.333% - var(--lumo-space-m));
+    }
+    
+    .main-view .card-item {
+        flex: 0 0 calc(33.333% - var(--lumo-space-m));
+        max-width: calc(33.333% - var(--lumo-space-m));
+    }
+}
+
+@media (min-width: 1281px) {
+    .main-view {
+        --card-width: calc(25% - var(--lumo-space-m));
+    }
+    
+    .main-view .card-item {
+        flex: 0 0 calc(25% - var(--lumo-space-m));
+        max-width: calc(25% - var(--lumo-space-m));
+    }
+}
+
+/* Loading indicator animation */
+.main-view vaadin-progress-bar {
+    height: 4px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Sort select styling */
+.main-view vaadin-select {
+    margin-bottom: 1rem;
+    width: auto;
+    min-width: 200px;
+}

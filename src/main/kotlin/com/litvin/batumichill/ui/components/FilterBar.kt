@@ -4,23 +4,28 @@ import com.litvin.batumichill.model.Category
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.combobox.MultiSelectComboBox
+import com.vaadin.flow.component.dependency.CssImport
+import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
-import com.vaadin.flow.component.orderedlayout.FlexComponent
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.FlexLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant
 import com.vaadin.flow.theme.lumo.LumoUtility.*
 
 /**
  * A component that provides filtering options for locations.
+ * Responsive design that adapts to different screen sizes.
  */
-class FilterBar : HorizontalLayout() {
+@CssImport("./styles/filter-bar.css")
+class FilterBar : VerticalLayout() {
 
     private val categoryFilter = MultiSelectComboBox<Category>()
     private val visitedFilter = RadioButtonGroup<String>()
     private val clearFiltersButton = Button("Clear Filters")
-    
+    private val filtersContainer = FlexLayout()
+
     // Event listeners
     private var categoryChangeListener: ((Set<Category>) -> Unit)? = null
     private var visitedChangeListener: ((String) -> Unit)? = null
@@ -35,21 +40,41 @@ class FilterBar : HorizontalLayout() {
             Margin.Bottom.MEDIUM,
             Width.FULL
         )
-        setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER)
-        setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN)
+        setSpacing(false)
+        setPadding(true)
         setWidthFull()
-        
+        addClassName("filter-bar")
+
+        // Title
+        val title = H4("Filters")
+        title.addClassNames(
+            Margin.NONE,
+            Margin.Bottom.SMALL,
+            TextColor.SECONDARY
+        )
+
+        // Configure filters container
+        filtersContainer.addClassNames(
+            Display.FLEX,
+            FlexWrap.WRAP,
+            Gap.MEDIUM,
+            Width.FULL
+        )
+
         // Configure category filter
         configureCategoryFilter()
-        
+
         // Configure visited filter
         configureVisitedFilter()
-        
+
         // Configure clear filters button
         configureClearFiltersButton()
-        
+
+        // Add components to filters container
+        filtersContainer.add(categoryFilter, visitedFilter, clearFiltersButton)
+
         // Add components to layout
-        add(categoryFilter, visitedFilter, clearFiltersButton)
+        add(title, filtersContainer)
     }
 
     private fun configureCategoryFilter() {
@@ -79,7 +104,7 @@ class FilterBar : HorizontalLayout() {
             // Clear all filters
             categoryFilter.clear()
             visitedFilter.value = "All"
-            
+
             // Notify listeners
             clearFiltersListener?.invoke()
         }

@@ -4,6 +4,7 @@ import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.ui.LocationDetailView
 import com.litvin.batumichill.ui.util.CategoryColorUtil
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.html.Paragraph
 import com.vaadin.flow.component.html.Span
@@ -16,12 +17,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.*
 
 /**
  * A component that displays location information in a card format.
+ * Enhanced with better styling and hover effects.
  */
+@CssImport("./styles/location-card.css")
 class LocationCard(private val location: Location) : VerticalLayout() {
 
     init {
         addClassNames(
-            Background.CONTRAST_5,
+            Background.CONTRAST_10,
             BorderRadius.LARGE,
             BoxShadow.SMALL,
             Display.FLEX,
@@ -29,13 +32,13 @@ class LocationCard(private val location: Location) : VerticalLayout() {
             AlignItems.START,
             Padding.MEDIUM,
             Height.AUTO,
-            Width.AUTO
+            Width.AUTO,
+            "location-card"
         )
         setSpacing(false)
         setWidthFull()
-        style["transition"] = "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out"
-        style["cursor"] = "pointer"
-        style["hover"] = "transform: translateY(-5px); box-shadow: var(--lumo-box-shadow-m)"
+        setHeight("auto")
+        setMinHeight("200px")
 
         // Add click listener to navigate to detail view
         addClickListener { 
@@ -47,13 +50,15 @@ class LocationCard(private val location: Location) : VerticalLayout() {
         headerLayout.setWidthFull()
         headerLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER)
         headerLayout.justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
+        headerLayout.addClassName("card-header")
 
         // Location name
         val nameElement = H3(location.name)
         nameElement.addClassNames(
             Margin.NONE,
             FontSize.XLARGE,
-            TextColor.PRIMARY
+            TextColor.PRIMARY,
+            "card-title"
         )
 
         // Visited status indicator
@@ -68,7 +73,8 @@ class LocationCard(private val location: Location) : VerticalLayout() {
                 Padding.Horizontal.SMALL,
                 Padding.Vertical.XSMALL,
                 FontSize.XSMALL,
-                FontWeight.MEDIUM
+                FontWeight.MEDIUM,
+                "visited-badge"
             )
             badge
         } else {
@@ -86,7 +92,8 @@ class LocationCard(private val location: Location) : VerticalLayout() {
         descriptionElement.addClassNames(
             Margin.Top.SMALL,
             Margin.Bottom.NONE,
-            TextColor.SECONDARY
+            TextColor.SECONDARY,
+            "card-description"
         )
 
         add(headerLayout, categoryBadge, descriptionElement)
@@ -95,15 +102,16 @@ class LocationCard(private val location: Location) : VerticalLayout() {
     private fun createCategoryBadge(location: Location): Span {
         val badge = Span(location.category.name.replace("_", " ").lowercase().capitalize())
         badge.addClassNames(
-            CategoryColorUtil.getBackgroundColorClass(location.category),
-            CategoryColorUtil.getTextColorClass(location.category),
             BorderRadius.MEDIUM,
             Padding.Horizontal.SMALL,
             Padding.Vertical.XSMALL,
             FontSize.SMALL,
             FontWeight.MEDIUM,
-            Margin.Top.XSMALL
+            Margin.Top.XSMALL,
+            "category-badge"
         )
+        badge.style.setBackgroundColor(CategoryColorUtil.getBackgroundColorStyle(location.category))
+        badge.style.setColor(CategoryColorUtil.getTextColorStyle(location.category))
         return badge
     }
 
