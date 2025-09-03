@@ -14,13 +14,15 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-03**
 
-## Iteration 2: Core Data Model & Simple UI
-- Create the Location entity with essential fields (name, description, category, visited flag)
-- Implement the Category entity/enum
-- Create a simple data repository
-- Add seed data with 5-10 popular locations in Batumi
-- Implement a basic list view that displays all locations
-- Add a simple header with application title
+## ✅ COMPLETED: Iteration 2: Core Data Model & Simple UI ✅
+- ✓ Create the Location entity with essential fields (name, description, category, visited flag)
+- ✓ Implement the Category entity/enum
+- ✓ Create a simple data repository
+- ✓ Add seed data with 5-10 popular locations in Batumi
+- ✓ Implement a basic list view that displays all locations
+- ✓ Add a simple header with application title
+
+**Status: COMPLETED on 2025-09-03**
 
 ## Iteration 3: Location Cards MVP
 - Design and implement location card component
