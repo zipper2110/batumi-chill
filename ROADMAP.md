@@ -69,12 +69,14 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-17**
 
-## Iteration 8: Enhanced Map Features
-- Add popup information when markers are clicked
-- Implement category filtering on the map
-- Add color coding for markers based on category
-- Implement the ability to filter visited/not visited places on the map
-- Add a "center map" button
+## ✅ COMPLETED: Iteration 8: Enhanced Map Features ✅
+- ✓ Add popup information when markers are clicked
+- ✓ Implement category filtering on the map
+- ✓ Add color coding for markers based on category
+- ✓ Implement the ability to filter visited/not visited places on the map
+- ✓ Add a "center map" button
+
+**Status: COMPLETED on 2025-09-24**
 
 ## Iteration 9: Location Details Enhancement
 - Add support for multiple photos per location

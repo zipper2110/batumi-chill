@@ -4,10 +4,17 @@ import com.litvin.batumichill.model.Location
 import com.vaadin.flow.component.AttachEvent
 import com.vaadin.flow.component.Tag
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.dependency.NpmPackage
 import com.vaadin.flow.component.html.Div
+import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
+import com.vaadin.flow.component.orderedlayout.FlexComponent
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import elemental.json.Json
 
 @Tag("div")
@@ -15,28 +22,45 @@ import elemental.json.Json
 @JsModule("./js/map-connector.js")
 @CssImport("leaflet/dist/leaflet.css")
 @CssImport("./styles/map-view.css")
-class MapView : Div() {
+class MapView : VerticalLayout() {
 
     private var mapInitialized = false
+    private val mapContainer = Div()
+    private val centerMapButton = Button("Center Map", Icon(VaadinIcon.CROSSHAIRS))
+    private val mapControls = HorizontalLayout()
 
     init {
-        // Set the ID for the map container
-        element.setAttribute("id", "map-container")
+        // Remove padding and spacing
+        setPadding(false)
+        setSpacing(false)
 
-        // Set dimensions directly (these will be overridden by CSS)
-        style.set("height", "600px")
-        style.set("width", "100%")
+        // Configure map container
+        mapContainer.element.setAttribute("id", "map-container")
+        mapContainer.style.set("height", "600px")
+        mapContainer.style.set("width", "100%")
+        mapContainer.style.set("border", "2px solid #ccc")
+        mapContainer.style.set("position", "relative")
+        mapContainer.style.set("background-color", "#f5f5f5")
 
-        // Add a border to make the container visible even if the map doesn't load
-        style.set("border", "2px solid #ccc")
+        // Configure center map button
+        centerMapButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+        centerMapButton.addClickListener { centerMap() }
 
-        // Ensure the element has position relative for proper Leaflet rendering
-        style.set("position", "relative")
+        // Configure map controls
+        mapControls.setWidthFull()
+        mapControls.justifyContentMode = FlexComponent.JustifyContentMode.END
+        mapControls.setPadding(true)
+        mapControls.setSpacing(true)
+        mapControls.add(centerMapButton)
 
-        // Set a background color to make it visible
-        style.set("background-color", "#f5f5f5")
+        // Add container and controls to layout
+        add(mapControls, mapContainer)
 
-        println("MapView initialized with ID: ${element.getAttribute("id")}")
+        // Set the component's own display style to ensure it's properly handled in the layout
+        style.set("display", "flex")
+        style.set("flex-direction", "column")
+
+        println("MapView initialized with map ID: ${mapContainer.element.getAttribute("id")}")
     }
 
     override fun onAttach(attachEvent: AttachEvent) {
@@ -60,13 +84,13 @@ class MapView : Div() {
     fun initializeMap() {
         if (!mapInitialized) {
             // Log that we're initializing the map
-            println("Initializing map with element ID: ${element.getAttribute("id")}")
+            println("Initializing map with element ID: ${mapContainer.element.getAttribute("id")}")
 
             // Initialize the map centered on Batumi
             val page = UI.getCurrent().page
 
             // Add a callback to log any JavaScript errors
-            page.executeJs("try { return initMap($0, $1, $2); } catch(e) { console.error('Error in initMap:', e); return false; }", element, 41.6168, 41.6367)
+            page.executeJs("try { return initMap($0, $1, $2); } catch(e) { console.error('Error in initMap:', e); return false; }", mapContainer.element, 41.6168, 41.6367)
                 .then { result ->
                     println("Map initialization result: $result")
                 }
@@ -76,6 +100,7 @@ class MapView : Div() {
             println("Map already initialized")
         }
     }
+
 
     fun updateMarkers(locations: List<Location>) {
         println("Updating markers with ${locations.size} locations")
@@ -98,7 +123,7 @@ class MapView : Div() {
 
         println("Sending ${markersArray.length()} markers to JavaScript")
 
-        UI.getCurrent().page.executeJs("try { updateMarkers($0, $1); return true; } catch(e) { console.error('Error in updateMarkers:', e); return false; }", element, markersArray)
+        UI.getCurrent().page.executeJs("try { updateMarkers($0, $1); return true; } catch(e) { console.error('Error in updateMarkers:', e); return false; }", mapContainer.element, markersArray)
             .then { result ->
                 println("Markers update result: $result")
             }
@@ -107,9 +132,21 @@ class MapView : Div() {
     fun clearMarkers() {
         println("Clearing markers")
 
-        UI.getCurrent().page.executeJs("try { clearMarkers($0); return true; } catch(e) { console.error('Error in clearMarkers:', e); return false; }", element)
+        UI.getCurrent().page.executeJs("try { clearMarkers($0); return true; } catch(e) { console.error('Error in clearMarkers:', e); return false; }", mapContainer.element)
             .then { result ->
                 println("Markers clear result: $result")
+            }
+    }
+
+    /**
+     * Centers the map on Batumi.
+     */
+    fun centerMap() {
+        println("Centering map")
+
+        UI.getCurrent().page.executeJs("try { centerMap($0); return true; } catch(e) { console.error('Error in centerMap:', e); return false; }", mapContainer.element)
+            .then { result ->
+                println("Center map result: $result")
             }
     }
 }

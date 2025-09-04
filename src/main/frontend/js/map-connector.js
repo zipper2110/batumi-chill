@@ -271,3 +271,29 @@ window.clearMarkers = function(element) {
         return false;
     }
 };
+
+// Center the map on Batumi
+window.centerMap = function(element) {
+    console.log('Centering map for element ID:', element.id);
+
+    try {
+        // Get the map from the registry
+        const mapData = mapRegistry.get(element.id);
+
+        if (!mapData || !mapData.map) {
+            console.error('Map not initialized for element ID:', element.id);
+            return false;
+        }
+
+        const map = mapData.map;
+
+        // Center the map on Batumi
+        map.setView([41.6168, 41.6367], 13);
+        console.log('Map centered on Batumi');
+
+        return true;
+    } catch (error) {
+        console.error('Error centering map:', error);
+        return false;
+    }
+};

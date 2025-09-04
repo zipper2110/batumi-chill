@@ -98,8 +98,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         // Add the current view component (initially cards layout)
         add(cardsLayout)
 
-        // Hide map view initially
-        mapView.style.set("display", "none")
+        // MapView is already added in configureMapView() and initially hidden
 
         // Load data
         updateList()
@@ -110,11 +109,11 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
 
         // Ensure the map container has proper dimensions
         mapView.setWidthFull()
-        mapView.style.set("height", "600px")
+        mapView.style.set("height", "auto") // Allow height to adjust based on content
         mapView.style.set("margin-top", "1rem")
 
-        // Add a border to make the map container visible even if the map doesn't load
-        mapView.style.set("border", "2px solid #ccc")
+        // Initially hide the map view
+        mapView.style.set("display", "none")
 
         // Add the map view to the layout
         add(mapView)
@@ -140,7 +139,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
 
             // Switch to map view
             cardsLayout.style.set("display", "none")
-            mapView.style.set("display", "block")
+            mapView.style.set("display", "flex") // Use flex to ensure proper layout
 
             println("Initializing map")
             try {
