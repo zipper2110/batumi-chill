@@ -13,6 +13,70 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
 });
 
+// Function to create custom marker icons based on category and visited status
+function createCustomMarkerIcon(category, visited) {
+    // Define colors for different categories
+    const categoryColors = {
+        'RESTAURANT': '#FF5722',    // Orange-red
+        'HISTORICAL_SITE': '#8D6E63', // Brown
+        'PARK': '#4CAF50',          // Green
+        'BEACH': '#03A9F4',         // Light blue
+        'CAFE': '#795548',          // Brown
+        'MUSEUM': '#9C27B0',        // Purple
+        'VIEWPOINT': '#3F51B5',     // Indigo
+        'SHOPPING': '#E91E63',      // Pink
+        'ENTERTAINMENT': '#FFC107'  // Amber
+    };
+
+    // Default color if category not found
+    const color = categoryColors[category] || '#2196F3'; // Default blue
+
+    // Adjust opacity based on visited status
+    const opacity = visited ? 0.7 : 1.0;
+
+    // Create custom icon
+    return L.divIcon({
+        className: 'custom-map-marker',
+        html: `<div style="
+            background-color: ${color}; 
+            opacity: ${opacity};
+            width: 24px; 
+            height: 24px; 
+            border-radius: 50%; 
+            border: 2px solid white;
+            box-shadow: 0 0 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        ">
+            ${getIconForCategory(category)}
+        </div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14]
+    });
+}
+
+// Helper function to get icon character for category
+function getIconForCategory(category) {
+    const categoryIcons = {
+        'RESTAURANT': '🍽️',
+        'HISTORICAL_SITE': '🏛️',
+        'PARK': '🌳',
+        'BEACH': '🏖️',
+        'CAFE': '☕',
+        'MUSEUM': '🏛️',
+        'VIEWPOINT': '🌄',
+        'SHOPPING': '🛍️',
+        'ENTERTAINMENT': '🎭'
+    };
+
+    return categoryIcons[category] || '';
+}
+
 // Create a registry to store map and marker references
 // This avoids circular references when the element is serialized
 const mapRegistry = new Map();
@@ -58,20 +122,35 @@ window.initMap = function(element, lat, lng) {
             position: containerStyle.position
         });
 
-        // Create a map instance centered on Batumi
+        // Create a map instance centered on Batumi with enhanced options
         console.log('Creating map with L.map()...');
         const map = L.map(element.id, {
             center: [lat, lng],
             zoom: 13,
-            zoomControl: true
+            zoomControl: false,  // We'll add zoom control manually for better positioning
+            scrollWheelZoom: true,
+            doubleClickZoom: true,
+            dragging: true,
+            zoomAnimation: true,
+            fadeAnimation: true,
+            markerZoomAnimation: true
         });
+
+        // Add zoom control to the top-right corner
+        L.control.zoom({
+            position: 'topright'
+        }).addTo(map);
+
+        // We no longer add the legend as a Leaflet control
+        // It will be added below the map instead
 
         console.log('Map created successfully');
 
-        // Add OpenStreetMap tile layer
+        // Add a more visually appealing map tile layer
         console.log('Adding tile layer...');
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        L.tileLayer('https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=6170aad10dfd42a38d4d8c709a536f38', {
+            attribution: '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 22
         }).addTo(map);
 
         console.log('Tile layer added to map');
@@ -127,8 +206,9 @@ window.updateMarkers = function(element, markersData) {
 
             console.log('Creating marker for:', markerData.name, 'at position:', markerData.lat, markerData.lng);
 
-            // Create marker
-            const marker = L.marker([markerData.lat, markerData.lng]).addTo(map);
+            // Create custom marker based on category
+            const markerIcon = createCustomMarkerIcon(markerData.category, markerData.visited);
+            const marker = L.marker([markerData.lat, markerData.lng], { icon: markerIcon }).addTo(map);
 
             // Add popup with location information
             marker.bindPopup(`
