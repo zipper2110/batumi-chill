@@ -13,7 +13,7 @@ class LocationService(private val locationRepository: LocationRepository) {
     }
 
     fun getLocationById(id: Long): Location? {
-        return locationRepository.findById(id).orElse(null)
+        return locationRepository.findByIdWithPhotos(id) ?: locationRepository.findById(id).orElse(null)
     }
 
     fun getLocationsByCategory(category: Category): List<Location> {

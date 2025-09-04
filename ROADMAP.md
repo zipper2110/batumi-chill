@@ -78,12 +78,14 @@ The approach is to start with a small, working MVP and incrementally add feature
 
 **Status: COMPLETED on 2025-09-24**
 
-## Iteration 9: Location Details Enhancement
-- Add support for multiple photos per location
-- Implement opening hours display
-- Add address and contact information
-- Create a "coolness rating" feature (must-see, cool, just ok)
-- Implement address display and linking to external maps
+## ✅ COMPLETED: Iteration 9: Location Details Enhancement ✅
+- ✓ Add support for multiple photos per location
+- ✓ Implement opening hours display
+- ✓ Add address and contact information
+- ✓ Create a "coolness rating" feature (must-see, cool, just ok)
+- ✓ Implement address display and linking to external maps
+
+**Status: COMPLETED on 2025-10-01**
 
 ## Iteration 10: Final Features & Polish
 - Implement user location detection (if browser permits)

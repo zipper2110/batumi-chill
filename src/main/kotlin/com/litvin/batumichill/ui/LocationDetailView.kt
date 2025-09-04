@@ -3,17 +3,17 @@ package com.litvin.batumichill.ui
 import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.service.LocationService
 import com.litvin.batumichill.ui.util.CategoryColorUtil
+import com.litvin.batumichill.ui.util.CoolnessRatingUtil
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.checkbox.Checkbox
 import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.html.H2
-import com.vaadin.flow.component.html.Paragraph
-import com.vaadin.flow.component.html.Span
+import com.vaadin.flow.component.html.*
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.notification.Notification
+import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.progressbar.ProgressBar
@@ -98,9 +98,12 @@ class LocationDetailView(private val locationService: LocationService) : Vertica
         // Category badge
         val categoryBadge = createCategoryBadge(location)
 
-        // Header layout with name and category
-        val headerLayout = HorizontalLayout(nameElement, categoryBadge)
-        headerLayout.setDefaultVerticalComponentAlignment(com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER)
+        // Coolness rating badge
+        val coolnessRatingBadge = createCoolnessRatingBadge(location)
+
+        // Header layout with name, category and coolness rating
+        val headerLayout = HorizontalLayout(nameElement, categoryBadge, coolnessRatingBadge)
+        headerLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER)
         headerLayout.addClassName(Gap.MEDIUM)
 
         // Description
@@ -111,6 +114,12 @@ class LocationDetailView(private val locationService: LocationService) : Vertica
             TextColor.SECONDARY,
             MaxWidth.SCREEN_MEDIUM
         )
+
+        // Photo gallery
+        val photoGallery = createPhotoGallery(location)
+
+        // Info section
+        val infoSection = createInfoSection(location)
 
         // Visited checkbox
         visitedCheckbox.value = location.visited
@@ -126,7 +135,194 @@ class LocationDetailView(private val locationService: LocationService) : Vertica
         }
 
         // Add components to layout
-        contentContainer.add(backButton, headerLayout, descriptionElement, visitedCheckbox)
+        contentContainer.add(
+            backButton, 
+            headerLayout, 
+            descriptionElement,
+            photoGallery,
+            infoSection,
+            visitedCheckbox
+        )
+    }
+
+    private fun createPhotoGallery(location: Location): Div {
+        val galleryContainer = Div()
+        galleryContainer.addClassNames(
+            Width.FULL,
+            Margin.Vertical.MEDIUM
+        )
+
+        if (location.photos.isEmpty()) {
+            val noPhotosMessage = Paragraph("No photos available")
+            noPhotosMessage.addClassNames(
+                TextColor.SECONDARY
+            )
+            noPhotosMessage.style.set("font-style", "italic")
+            galleryContainer.add(noPhotosMessage)
+            return galleryContainer
+        }
+
+        val photosLayout = HorizontalLayout()
+        photosLayout.addClassNames(
+            Width.FULL,
+            Overflow.AUTO,
+            Gap.MEDIUM
+        )
+
+        location.photos.forEach { photoUrl ->
+            val photoContainer = Div()
+            photoContainer.addClassNames(
+                Height.MEDIUM,
+                Width.AUTO
+            )
+            photoContainer.style.set("box-sizing", "border-box")
+
+            val image = Image(photoUrl, "Photo of ${location.name}")
+            image.addClassNames(
+                Height.FULL,
+                BorderRadius.MEDIUM
+            )
+            image.style.set("object-fit", "cover")
+
+            photoContainer.add(image)
+            photosLayout.add(photoContainer)
+        }
+
+        galleryContainer.add(photosLayout)
+        return galleryContainer
+    }
+
+    private fun createInfoSection(location: Location): Div {
+        val infoContainer = Div()
+        infoContainer.addClassNames(
+            Width.FULL,
+            Margin.Vertical.MEDIUM,
+            MaxWidth.SCREEN_MEDIUM
+        )
+
+        // Section title removed as per requirements
+
+        // Address with map link
+        if (!location.address.isNullOrBlank()) {
+            // Create a horizontal layout for the map button and address
+            val addressContainer = HorizontalLayout()
+            addressContainer.setSpacing(true)
+            addressContainer.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.START)
+
+            // Add map button if external map URL is available
+            if (!location.externalMapUrl.isNullOrBlank()) {
+                val mapButton = Button(Icon(VaadinIcon.MAP_MARKER))
+                mapButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+                mapButton.addClickListener { 
+                    UI.getCurrent().page.open(location.externalMapUrl, "_blank")
+                }
+                mapButton.addClassNames(
+                    Margin.Right.SMALL
+                )
+                addressContainer.add(mapButton)
+            }
+
+            // Create and add the address layout without the "Address" label
+            val addressLayout = createInfoItem(VaadinIcon.MAP_MARKER, "", location.address!!)
+            addressContainer.add(addressLayout)
+
+            infoContainer.add(addressContainer)
+        }
+
+        // Opening hours (without title)
+        if (!location.openingHours.isNullOrBlank()) {
+            val hoursLayout = createInfoItem(VaadinIcon.CLOCK, "", location.openingHours!!)
+            infoContainer.add(hoursLayout)
+        }
+
+        // Phone
+        if (!location.phone.isNullOrBlank()) {
+            val phoneLayout = createInfoItem(VaadinIcon.PHONE, "Phone", location.phone!!)
+            infoContainer.add(phoneLayout)
+        }
+
+        // Website
+        if (!location.website.isNullOrBlank()) {
+            val websiteLayout = createInfoItem(VaadinIcon.GLOBE, "Website", location.website!!)
+            val websiteLink = Anchor(location.website, "Visit website")
+            websiteLink.addClassNames(
+                Margin.Top.XSMALL,
+                TextColor.PRIMARY
+            )
+            websiteLayout.add(websiteLink)
+            infoContainer.add(websiteLayout)
+        }
+
+        return infoContainer
+    }
+
+    private fun createInfoItem(icon: VaadinIcon, label: String, value: String): VerticalLayout {
+        val layout = VerticalLayout()
+        layout.setPadding(false)
+        layout.setSpacing(false)
+        layout.addClassNames(
+            Margin.Bottom.MEDIUM
+        )
+
+        val labelLayout = HorizontalLayout()
+        labelLayout.setSpacing(true)
+        labelLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER)
+
+        val iconElement = Icon(icon)
+        iconElement.addClassNames(
+            TextColor.SECONDARY,
+            IconSize.SMALL
+        )
+
+        // Only add label if it's not empty
+        if (label.isNotEmpty()) {
+            val labelElement = Span(label)
+            labelElement.addClassNames(
+                FontWeight.SEMIBOLD,
+                TextColor.SECONDARY
+            )
+            labelLayout.add(iconElement, labelElement)
+        } else {
+            labelLayout.add(iconElement)
+        }
+
+        val valueElement = Paragraph(value)
+        valueElement.addClassNames(
+            Margin.Top.XSMALL,
+            Margin.Left.SMALL,
+            TextColor.BODY
+        )
+
+        layout.add(labelLayout, valueElement)
+        return layout
+    }
+
+    private fun createCoolnessRatingBadge(location: Location): Span {
+        val rating = location.coolnessRating
+        val badge = Span(CoolnessRatingUtil.getDisplayName(rating))
+
+        badge.addClassNames(
+            BorderRadius.MEDIUM,
+            Padding.Horizontal.SMALL,
+            Padding.Vertical.XSMALL,
+            FontSize.SMALL,
+            FontWeight.MEDIUM,
+            "coolness-badge"
+        )
+
+        badge.style.setBackgroundColor(CoolnessRatingUtil.getBackgroundColorStyle(rating))
+        badge.style.setColor(CoolnessRatingUtil.getTextColorStyle(rating))
+
+        // Add icon
+        val icon = Icon(CoolnessRatingUtil.getIcon(rating))
+        icon.addClassNames(
+            IconSize.SMALL,
+            Margin.Right.XSMALL
+        )
+
+        badge.element.insertChild(0, icon.element)
+
+        return badge
     }
 
     private fun showNotFound() {

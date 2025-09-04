@@ -3,6 +3,7 @@ package com.litvin.batumichill.ui.components
 import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.ui.LocationDetailView
 import com.litvin.batumichill.ui.util.CategoryColorUtil
+import com.litvin.batumichill.ui.util.CoolnessRatingUtil
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H3
@@ -87,6 +88,14 @@ class LocationCard(private val location: Location) : VerticalLayout() {
         // Category badge
         val categoryBadge = createCategoryBadge(location)
 
+        // Coolness rating badge
+        val coolnessRatingBadge = createCoolnessRatingBadge(location)
+
+        // Badges layout
+        val badgesLayout = HorizontalLayout(categoryBadge, coolnessRatingBadge)
+        badgesLayout.setSpacing(true)
+        badgesLayout.addClassName(Gap.SMALL)
+
         // Description
         val descriptionElement = Paragraph(getShortDescription(location.description))
         descriptionElement.addClassNames(
@@ -96,7 +105,7 @@ class LocationCard(private val location: Location) : VerticalLayout() {
             "card-description"
         )
 
-        add(headerLayout, categoryBadge, descriptionElement)
+        add(headerLayout, badgesLayout, descriptionElement)
     }
 
     private fun createCategoryBadge(location: Location): Span {
@@ -122,5 +131,32 @@ class LocationCard(private val location: Location) : VerticalLayout() {
         } else {
             description
         }
+    }
+
+    private fun createCoolnessRatingBadge(location: Location): Span {
+        val rating = location.coolnessRating
+        val badge = Span(CoolnessRatingUtil.getDisplayName(rating))
+
+        badge.addClassNames(
+            BorderRadius.MEDIUM,
+            Padding.Horizontal.SMALL,
+            Padding.Vertical.XSMALL,
+            FontSize.SMALL,
+            FontWeight.MEDIUM,
+            "coolness-badge"
+        )
+
+        badge.style.setBackgroundColor(CoolnessRatingUtil.getBackgroundColorStyle(rating))
+        badge.style.setColor(CoolnessRatingUtil.getTextColorStyle(rating))
+
+        // Add icon
+        val icon = Icon(CoolnessRatingUtil.getIcon(rating))
+        icon.addClassNames(
+            Margin.Right.XSMALL
+        )
+
+        badge.element.insertChild(0, icon.element)
+
+        return badge
     }
 }
