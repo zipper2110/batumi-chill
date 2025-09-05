@@ -8,7 +8,6 @@ import com.litvin.batumichill.ui.components.LocationCard
 import com.litvin.batumichill.ui.components.MapView
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.Paragraph
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -47,21 +46,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         setWidthFull()
         addClassName("main-view")
 
-        // Page title and description
-        val pageTitle = H2("Discover Batumi")
-        pageTitle.addClassNames(
-            FontSize.XXXLARGE,
-            Margin.NONE,
-            TextColor.PRIMARY
-        )
-
-        val description = Paragraph("Explore the beautiful coastal city of Batumi with our curated list of must-visit locations")
-        description.addClassNames(
-            Margin.Top.SMALL,
-            Margin.Bottom.MEDIUM,
-            TextColor.SECONDARY,
-            MaxWidth.SCREEN_MEDIUM
-        )
+        // Title and description removed
 
         // Configure loading indicator
         configureLoadingIndicator()
@@ -85,7 +70,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         sortLayout.defaultVerticalComponentAlignment = FlexComponent.Alignment.BASELINE
 
         // Add components to layout
-        add(pageTitle, description, filterBar, sortLayout, loadingIndicator)
+        add(filterBar, sortLayout, loadingIndicator)
 
         // Add the current view component (cards layout)
         add(cardsLayout)
@@ -115,7 +100,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         // Ensure the map container has proper dimensions
         mapView.setWidthFull()
         mapView.style.set("height", "auto") // Allow height to adjust based on content
-        mapView.style.set("margin-top", "1rem")
+//        mapView.style.set("margin-top", "1rem")
 
         // Make the map view visible all the time
         mapView.style.set("display", "flex")
@@ -281,12 +266,6 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
                         cardsLayout.add(card)
                     }
 
-                    // Show notification about the number of locations
-                    Notification.show(
-                        "${filteredLocations.size} locations found",
-                        3000,
-                        Notification.Position.BOTTOM_START
-                    )
                 }
 
                 // Always update map markers to apply filters to the map

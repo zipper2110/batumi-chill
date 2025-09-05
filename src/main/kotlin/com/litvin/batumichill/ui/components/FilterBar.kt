@@ -3,7 +3,6 @@ package com.litvin.batumichill.ui.components
 import com.litvin.batumichill.model.Category
 import com.vaadin.flow.component.combobox.MultiSelectComboBox
 import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -39,14 +38,6 @@ class FilterBar : VerticalLayout() {
         setWidthFull()
         addClassName("filter-bar")
 
-        // Title
-        val title = H4("Filters")
-        title.addClassNames(
-            Margin.NONE,
-            Margin.Bottom.SMALL,
-            TextColor.SECONDARY
-        )
-
         // Configure filters container
         filtersContainer.addClassNames(
             Display.FLEX,
@@ -65,21 +56,22 @@ class FilterBar : VerticalLayout() {
         filtersContainer.add(categoryFilter, visitedFilter)
 
         // Add components to layout
-        add(title, filtersContainer)
+        add(filtersContainer)
     }
 
     private fun configureCategoryFilter() {
-        categoryFilter.setLabel("Filter by Category")
-        categoryFilter.setPlaceholder("Select categories")
-        categoryFilter.setItems(*Category.values())
+        categoryFilter.label = "Filter by Category"
+        categoryFilter.placeholder = "Select categories"
+        categoryFilter.setItems(Category.entries)
         categoryFilter.setItemLabelGenerator { it.name.replace("_", " ").lowercase().capitalize() }
+        categoryFilter.isAllowCustomValue = false
         categoryFilter.addValueChangeListener { event ->
             categoryChangeListener?.invoke(event.value)
         }
     }
 
     private fun configureVisitedFilter() {
-        visitedFilter.setLabel("Show")
+        visitedFilter.label = "Show"
         visitedFilter.setItems("All", "Visited", "Not Visited")
         visitedFilter.value = "All"
         visitedFilter.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL)
@@ -100,13 +92,5 @@ class FilterBar : VerticalLayout() {
      */
     fun setVisitedChangeListener(listener: (String) -> Unit) {
         visitedChangeListener = listener
-    }
-
-    /**
-     * Reset all filters to their default values.
-     */
-    fun resetFilters() {
-        categoryFilter.clear()
-        visitedFilter.value = "All"
     }
 }
