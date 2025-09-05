@@ -1,20 +1,28 @@
 package com.litvin.batumichill.ui.components
 
 import com.litvin.batumichill.model.Category
+import com.litvin.batumichill.service.TranslationService
 import com.vaadin.flow.component.combobox.MultiSelectComboBox
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant
+import com.vaadin.flow.spring.annotation.SpringComponent
+import com.vaadin.flow.spring.annotation.UIScope
 import com.vaadin.flow.theme.lumo.LumoUtility.*
+import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * A component that provides filtering options for locations.
  * Responsive design that adapts to different screen sizes.
  */
+@SpringComponent
+@UIScope
 @CssImport("./styles/filter-bar.css")
-class FilterBar : VerticalLayout() {
+class FilterBar @Autowired constructor(
+    private val translationService: TranslationService
+) : VerticalLayout() {
 
     private val categoryFilter = MultiSelectComboBox<Category>()
     private val visitedFilter = RadioButtonGroup<String>()
@@ -60,8 +68,8 @@ class FilterBar : VerticalLayout() {
     }
 
     private fun configureCategoryFilter() {
-        categoryFilter.label = "Filter by Category"
-        categoryFilter.placeholder = "Select categories"
+        categoryFilter.label = translationService.getMessage("filter.category.label")
+        categoryFilter.placeholder = translationService.getMessage("filter.category.placeholder")
         categoryFilter.setItems(Category.entries)
         categoryFilter.setItemLabelGenerator { it.name.replace("_", " ").lowercase().capitalize() }
         categoryFilter.isAllowCustomValue = false
@@ -71,12 +79,24 @@ class FilterBar : VerticalLayout() {
     }
 
     private fun configureVisitedFilter() {
-        visitedFilter.label = "Show"
-        visitedFilter.setItems("All", "Visited", "Not Visited")
-        visitedFilter.value = "All"
+        visitedFilter.label = translationService.getMessage("filter.visited.label")
+
+        // Get translated items
+        val allText = translationService.getMessage("filter.visited.all")
+        val visitedText = translationService.getMessage("filter.visited.visited")
+        val notVisitedText = translationService.getMessage("filter.visited.notVisited")
+
+        visitedFilter.setItems(allText, visitedText, notVisitedText)
+        visitedFilter.value = allText
         visitedFilter.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL)
         visitedFilter.addValueChangeListener { event ->
-            visitedChangeListener?.invoke(event.value)
+            // Map the translated text back to the expected values in the MainView
+            val value = when (event.value) {
+                visitedText -> "Visited"
+                notVisitedText -> "Not Visited"
+                else -> "All"
+            }
+            visitedChangeListener?.invoke(value)
         }
     }
 

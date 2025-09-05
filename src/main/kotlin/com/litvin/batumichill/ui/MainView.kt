@@ -3,6 +3,7 @@ package com.litvin.batumichill.ui
 import com.litvin.batumichill.model.Category
 import com.litvin.batumichill.model.Location
 import com.litvin.batumichill.service.LocationService
+import com.litvin.batumichill.service.TranslationService
 import com.litvin.batumichill.ui.components.FilterBar
 import com.litvin.batumichill.ui.components.LocationCard
 import com.litvin.batumichill.ui.components.MapView
@@ -16,20 +17,26 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.progressbar.ProgressBar
 import com.vaadin.flow.component.select.Select
-import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.RouteAlias
+import com.vaadin.flow.spring.annotation.SpringComponent
+import com.vaadin.flow.spring.annotation.UIScope
 import com.vaadin.flow.theme.lumo.LumoUtility.*
+import org.springframework.beans.factory.annotation.Autowired
 
 @Route(value = "locations", layout = MainLayout::class)
 @RouteAlias(value = "", layout = MainLayout::class)
-@PageTitle("Locations | Batumi Chill Guide")
 @CssImport("./styles/main-view.css")
-class MainView(private val locationService: LocationService) : VerticalLayout() {
+@SpringComponent
+@UIScope
+class MainView @Autowired constructor(
+    private val locationService: LocationService,
+    private val translationService: TranslationService,
+    private val filterBar: FilterBar
+) : VerticalLayout() {
 
     private val cardsLayout = FlexLayout()
     private val mapView = MapView()
-    private val filterBar = FilterBar()
     private val loadingIndicator = ProgressBar()
     private val sortSelect = Select<String>()
 
@@ -42,6 +49,9 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
     private var sortBy: String = "Name (A-Z)"
 
     init {
+        // Set page title dynamically
+        UI.getCurrent().page.setTitle("Locations | " + translationService.getMessage("app.title"))
+
         addClassName(Padding.LARGE)
         setWidthFull()
         addClassName("main-view")
@@ -87,7 +97,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         } catch (e: Exception) {
             println("Error initializing map: ${e.message}")
             Notification.show(
-                "Error initializing map: ${e.message}",
+                translationService.getMessage("error.map.init", e.message ?: ""),
                 3000,
                 Notification.Position.BOTTOM_START
             )
@@ -174,15 +184,29 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
     }
 
     private fun configureSorting() {
-        sortSelect.setLabel("Sort by")
-        sortSelect.setItems("Name (A-Z)", "Name (Z-A)", "Category (A-Z)", "Category (Z-A)")
-        sortSelect.value = "Name (A-Z)"
+        sortSelect.setLabel(translationService.getMessage("sort.label"))
+
+        // Get translated sort options
+        val nameAsc = translationService.getMessage("sort.nameAsc")
+        val nameDesc = translationService.getMessage("sort.nameDesc")
+        val categoryAsc = translationService.getMessage("sort.categoryAsc")
+        val categoryDesc = translationService.getMessage("sort.categoryDesc")
+
+        sortSelect.setItems(nameAsc, nameDesc, categoryAsc, categoryDesc)
+        sortSelect.value = nameAsc
         sortSelect.addClassNames(
             Margin.Top.MEDIUM,
             Width.AUTO
         )
         sortSelect.addValueChangeListener {
-            sortBy = it.value
+            // Map the translated text back to the expected values for sorting
+            sortBy = when (it.value) {
+                nameAsc -> "Name (A-Z)"
+                nameDesc -> "Name (Z-A)"
+                categoryAsc -> "Category (A-Z)"
+                categoryDesc -> "Category (Z-A)"
+                else -> "Name (A-Z)"
+            }
             updateList()
         }
     }
@@ -196,7 +220,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
             // Show notification about active filters
             if (categories.isNotEmpty()) {
                 Notification.show(
-                    "Filtering by ${categories.size} categories",
+                    translationService.getMessage("filter.notification.categories", categories.size),
                     3000,
                     Notification.Position.BOTTOM_START
                 )
@@ -211,7 +235,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
             // Show notification about active filter
             if (filter != "All") {
                 Notification.show(
-                    "Showing $filter locations",
+                    translationService.getMessage("filter.notification.visited", filter),
                     3000,
                     Notification.Position.BOTTOM_START
                 )
@@ -249,7 +273,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
                 // Display filtered locations
                 if (filteredLocations.isEmpty()) {
                     // Show a message when no locations match the filters
-                    val noResultsMessage = Paragraph("No locations match the selected filters")
+                    val noResultsMessage = Paragraph(translationService.getMessage("no.results"))
                     noResultsMessage.addClassNames(
                         Margin.Top.LARGE,
                         TextColor.SECONDARY,
@@ -274,7 +298,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
                 } catch (e: Exception) {
                     println("Error updating map markers: ${e.message}")
                     Notification.show(
-                        "Error updating map: ${e.message}",
+                        translationService.getMessage("error.map.update", e.message ?: ""),
                         3000,
                         Notification.Position.BOTTOM_START
                     )
@@ -282,7 +306,7 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
             } catch (e: Exception) {
                 // Handle errors
                 Notification.show(
-                    "Error loading locations: ${e.message}",
+                    translationService.getMessage("error.locations.load", e.message ?: ""),
                     5000,
                     Notification.Position.MIDDLE
                 )
