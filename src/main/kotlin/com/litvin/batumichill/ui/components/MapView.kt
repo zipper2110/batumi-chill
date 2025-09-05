@@ -4,16 +4,10 @@ import com.litvin.batumichill.model.Location
 import com.vaadin.flow.component.AttachEvent
 import com.vaadin.flow.component.Tag
 import com.vaadin.flow.component.UI
-import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.dependency.NpmPackage
 import com.vaadin.flow.component.html.Div
-import com.vaadin.flow.component.icon.Icon
-import com.vaadin.flow.component.icon.VaadinIcon
-import com.vaadin.flow.component.orderedlayout.FlexComponent
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import elemental.json.Json
 
@@ -26,8 +20,6 @@ class MapView : VerticalLayout() {
 
     private var mapInitialized = false
     private val mapContainer = Div()
-    private val centerMapButton = Button("Center Map", Icon(VaadinIcon.CROSSHAIRS))
-    private val mapControls = HorizontalLayout()
 
     init {
         // Remove padding and spacing
@@ -42,19 +34,8 @@ class MapView : VerticalLayout() {
         mapContainer.style.set("position", "relative")
         mapContainer.style.set("background-color", "#f5f5f5")
 
-        // Configure center map button
-        centerMapButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY)
-        centerMapButton.addClickListener { centerMap() }
-
-        // Configure map controls
-        mapControls.setWidthFull()
-        mapControls.justifyContentMode = FlexComponent.JustifyContentMode.END
-        mapControls.setPadding(true)
-        mapControls.setSpacing(true)
-        mapControls.add(centerMapButton)
-
-        // Add container and controls to layout
-        add(mapControls, mapContainer)
+        // Add container to layout
+        add(mapContainer)
 
         // Set the component's own display style to ensure it's properly handled in the layout
         style.set("display", "flex")
@@ -138,15 +119,4 @@ class MapView : VerticalLayout() {
             }
     }
 
-    /**
-     * Centers the map on Batumi.
-     */
-    fun centerMap() {
-        println("Centering map")
-
-        UI.getCurrent().page.executeJs("try { centerMap($0); return true; } catch(e) { console.error('Error in centerMap:', e); return false; }", mapContainer.element)
-            .then { result ->
-                println("Center map result: $result")
-            }
-    }
 }

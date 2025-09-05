@@ -1,13 +1,9 @@
 package com.litvin.batumichill.ui.components
 
 import com.litvin.batumichill.model.Category
-import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.combobox.MultiSelectComboBox
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H4
-import com.vaadin.flow.component.icon.Icon
-import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -23,13 +19,11 @@ class FilterBar : VerticalLayout() {
 
     private val categoryFilter = MultiSelectComboBox<Category>()
     private val visitedFilter = RadioButtonGroup<String>()
-    private val clearFiltersButton = Button("Clear Filters")
     private val filtersContainer = FlexLayout()
 
     // Event listeners
     private var categoryChangeListener: ((Set<Category>) -> Unit)? = null
     private var visitedChangeListener: ((String) -> Unit)? = null
-    private var clearFiltersListener: (() -> Unit)? = null
 
     init {
         addClassNames(
@@ -67,11 +61,8 @@ class FilterBar : VerticalLayout() {
         // Configure visited filter
         configureVisitedFilter()
 
-        // Configure clear filters button
-        configureClearFiltersButton()
-
         // Add components to filters container
-        filtersContainer.add(categoryFilter, visitedFilter, clearFiltersButton)
+        filtersContainer.add(categoryFilter, visitedFilter)
 
         // Add components to layout
         add(title, filtersContainer)
@@ -97,19 +88,6 @@ class FilterBar : VerticalLayout() {
         }
     }
 
-    private fun configureClearFiltersButton() {
-        clearFiltersButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
-        clearFiltersButton.icon = Icon(VaadinIcon.CLOSE_CIRCLE)
-        clearFiltersButton.addClickListener {
-            // Clear all filters
-            categoryFilter.clear()
-            visitedFilter.value = "All"
-
-            // Notify listeners
-            clearFiltersListener?.invoke()
-        }
-    }
-
     /**
      * Set a listener for category filter changes.
      */
@@ -122,13 +100,6 @@ class FilterBar : VerticalLayout() {
      */
     fun setVisitedChangeListener(listener: (String) -> Unit) {
         visitedChangeListener = listener
-    }
-
-    /**
-     * Set a listener for clear filters button clicks.
-     */
-    fun setClearFiltersListener(listener: () -> Unit) {
-        clearFiltersListener = listener
     }
 
     /**

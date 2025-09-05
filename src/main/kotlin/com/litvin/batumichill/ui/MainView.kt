@@ -7,13 +7,9 @@ import com.litvin.batumichill.ui.components.FilterBar
 import com.litvin.batumichill.ui.components.LocationCard
 import com.litvin.batumichill.ui.components.MapView
 import com.vaadin.flow.component.UI
-import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.Paragraph
-import com.vaadin.flow.component.icon.Icon
-import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.FlexLayout
@@ -37,10 +33,9 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
     private val filterBar = FilterBar()
     private val loadingIndicator = ProgressBar()
     private val sortSelect = Select<String>()
-    private val viewToggleButton = Button()
 
     // View state
-    private var currentView = "list" // "list" or "map"
+    private var currentView = "both" // Both views are visible simultaneously
 
     // Filter and sort state
     private var selectedCategories: Set<Category> = emptySet()
@@ -83,25 +78,35 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         // Configure map view
         configureMapView()
 
-        // Configure view toggle button
-        configureViewToggleButton()
-
-        // Create view toggle and sort layout
-        val toggleAndSortLayout = HorizontalLayout(viewToggleButton, sortSelect)
-        toggleAndSortLayout.setWidthFull()
-        toggleAndSortLayout.justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
-        toggleAndSortLayout.defaultVerticalComponentAlignment = FlexComponent.Alignment.BASELINE
+        // Create sort layout (removed toggle button)
+        val sortLayout = HorizontalLayout(sortSelect)
+        sortLayout.setWidthFull()
+        sortLayout.justifyContentMode = FlexComponent.JustifyContentMode.END
+        sortLayout.defaultVerticalComponentAlignment = FlexComponent.Alignment.BASELINE
 
         // Add components to layout
-        add(pageTitle, description, filterBar, toggleAndSortLayout, loadingIndicator)
+        add(pageTitle, description, filterBar, sortLayout, loadingIndicator)
 
-        // Add the current view component (initially cards layout)
+        // Add the current view component (cards layout)
         add(cardsLayout)
 
-        // MapView is already added in configureMapView() and initially hidden
+        // MapView is already added in configureMapView() and is always visible
 
         // Load data
         updateList()
+
+        // Initialize map and update markers
+        try {
+            mapView.initializeMap()
+            updateMapMarkers()
+        } catch (e: Exception) {
+            println("Error initializing map: ${e.message}")
+            Notification.show(
+                "Error initializing map: ${e.message}",
+                3000,
+                Notification.Position.BOTTOM_START
+            )
+        }
     }
 
     private fun configureMapView() {
@@ -112,8 +117,8 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         mapView.style.set("height", "auto") // Allow height to adjust based on content
         mapView.style.set("margin-top", "1rem")
 
-        // Initially hide the map view
-        mapView.style.set("display", "none")
+        // Make the map view visible all the time
+        mapView.style.set("display", "flex")
 
         // Add the map view to the layout
         add(mapView)
@@ -121,69 +126,6 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
         println("Map view added to layout with ID: ${mapView.element.getAttribute("id")}")
     }
 
-    private fun configureViewToggleButton() {
-        viewToggleButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST)
-        viewToggleButton.icon = Icon(VaadinIcon.MAP_MARKER)
-        viewToggleButton.text = "Show Map"
-
-        viewToggleButton.addClickListener {
-            toggleView()
-        }
-    }
-
-    private fun toggleView() {
-        println("Toggling view from $currentView")
-
-        if (currentView == "list") {
-            println("Switching to map view")
-
-            // Switch to map view
-            cardsLayout.style.set("display", "none")
-            mapView.style.set("display", "flex") // Use flex to ensure proper layout
-
-            println("Initializing map")
-            try {
-                mapView.initializeMap()
-            } catch (e: Exception) {
-                println("Error initializing map: ${e.message}")
-                Notification.show(
-                    "Error initializing map: ${e.message}",
-                    3000,
-                    Notification.Position.BOTTOM_START
-                )
-            }
-
-            viewToggleButton.text = "Show List"
-            viewToggleButton.icon = Icon(VaadinIcon.LIST)
-            currentView = "map"
-
-            println("Updating map markers")
-            // Update map markers
-            try {
-                updateMapMarkers()
-            } catch (e: Exception) {
-                println("Error updating map markers: ${e.message}")
-                Notification.show(
-                    "Error updating map: ${e.message}",
-                    3000,
-                    Notification.Position.BOTTOM_START
-                )
-            }
-
-            println("Map view switch complete")
-        } else {
-            println("Switching to list view")
-
-            // Switch to list view
-            mapView.style.set("display", "none")
-            cardsLayout.style.set("display", "flex")
-            viewToggleButton.text = "Show Map"
-            viewToggleButton.icon = Icon(VaadinIcon.MAP_MARKER)
-            currentView = "list"
-
-            println("List view switch complete")
-        }
-    }
 
     private fun updateMapMarkers() {
         println("Updating map markers")
@@ -289,18 +231,6 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
                     Notification.Position.BOTTOM_START
                 )
             }
-        }
-
-        // Set up clear filters listener
-        filterBar.setClearFiltersListener {
-            selectedCategories = emptySet()
-            visitedFilter = "All"
-            updateList()
-            Notification.show(
-                "Filters cleared",
-                3000,
-                Notification.Position.BOTTOM_START
-            )
         }
     }
 

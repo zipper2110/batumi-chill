@@ -74,7 +74,7 @@ The approach is to start with a small, working MVP and incrementally add feature
 - ✓ Implement category filtering on the map
 - ✓ Add color coding for markers based on category
 - ✓ Implement the ability to filter visited/not visited places on the map
-- ✓ Add a "center map" button
+- ✓ ~Add a "center map" button~ (removed in later iteration)
 
 **Status: COMPLETED on 2025-09-24**
 
@@ -93,8 +93,6 @@ The approach is to start with a small, working MVP and incrementally add feature
 - Sort locations by proximity
 - Implement "get directions" functionality
 - Add progress tracking (% of places visited)
-- Final UI polish and performance optimization
-- Comprehensive testing and bug fixing
 
 ## Future Enhancements (Post MVP)
 - User accounts and personalization
