@@ -289,18 +289,16 @@ class MainView(private val locationService: LocationService) : VerticalLayout() 
                     )
                 }
 
-                // Update map markers if map view is active
-                if (currentView == "map") {
-                    try {
-                        updateMapMarkers()
-                    } catch (e: Exception) {
-                        println("Error updating map markers: ${e.message}")
-                        Notification.show(
-                            "Error updating map: ${e.message}",
-                            3000,
-                            Notification.Position.BOTTOM_START
-                        )
-                    }
+                // Always update map markers to apply filters to the map
+                try {
+                    updateMapMarkers()
+                } catch (e: Exception) {
+                    println("Error updating map markers: ${e.message}")
+                    Notification.show(
+                        "Error updating map: ${e.message}",
+                        3000,
+                        Notification.Position.BOTTOM_START
+                    )
                 }
             } catch (e: Exception) {
                 // Handle errors
